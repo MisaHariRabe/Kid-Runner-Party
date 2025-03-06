@@ -1,30 +1,40 @@
 #include "AudioManager.hpp"
 
-AudioManager::AudioManager() : soundVolume(100.f), musicVolume(100.f) {}
+AudioManager::AudioManager() : soundVolume(80.f), musicVolume(100.f) {}
 
 AudioManager::~AudioManager() {}
 
 bool AudioManager::loadSound(const std::string &name, const std::string &filename)
 {
+    if (soundBuffers.find(name) != soundBuffers.end())
+    {
+        return true;
+    }
+
     sf::SoundBuffer buffer;
     if (!buffer.loadFromFile(filename))
     {
         std::cerr << "Erreur lors du chargement du fichier sonore : " << filename << std::endl;
         return false;
     }
-    soundBuffers[name] = buffer;
+    soundBuffers[name] = std::move(buffer);
     return true;
 }
 
 bool AudioManager::loadMusic(const std::string &name, const std::string &filename)
 {
+    if (music.find(name) != music.end())
+    {
+        return true;
+    }
+
     auto newMusic = std::make_unique<sf::Music>();
     if (!newMusic->openFromFile(filename))
     {
         std::cerr << "Erreur lors du chargement de la musique : " << filename << std::endl;
         return false;
     }
-    music[name] = std::move(newMusic); // Stockage dans la map via un unique_ptr
+    music[name] = std::move(newMusic);
     return true;
 }
 
@@ -32,12 +42,12 @@ void AudioManager::playSound(const std::string &name, bool loop)
 {
     if (soundBuffers.find(name) != soundBuffers.end())
     {
-        sf::Sound sound;
-        sound.setBuffer(soundBuffers[name]);
-        sound.setLoop(loop);
-        sound.setVolume(soundVolume);
-        sounds[name] = sound;
-        sounds[name].play();
+        auto sound = std::make_unique<sf::Sound>();
+        sound->setBuffer(soundBuffers[name]);
+        sound->setLoop(loop);
+        sound->setVolume(soundVolume);
+        sounds[name] = std::move(sound);
+        sounds[name]->play();
     }
     else
     {
@@ -63,11 +73,7 @@ void AudioManager::stopSound(const std::string &name)
 {
     if (sounds.find(name) != sounds.end())
     {
-        sounds[name].stop();
-    }
-    else
-    {
-        std::cerr << "Son non trouvé pour l'arrêt : " << name << std::endl;
+        sounds[name]->stop();
     }
 }
 
@@ -84,7 +90,7 @@ void AudioManager::setSoundVolume(float volume)
     soundVolume = volume;
     for (auto &pair : sounds)
     {
-        pair.second.setVolume(volume);
+        pair.second->setVolume(volume);
     }
 }
 

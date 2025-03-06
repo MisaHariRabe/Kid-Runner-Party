@@ -18,7 +18,6 @@ public:
 
     void playSound(const std::string &name, bool loop = false);
     void playMusic(const std::string &name, bool loop = true);
-
     void stopSound(const std::string &name);
     void stopMusic();
 
@@ -28,7 +27,7 @@ public:
 private:
     std::map<std::string, sf::SoundBuffer> soundBuffers;
     std::map<std::string, std::unique_ptr<sf::Music>> music;
-    std::map<std::string, sf::Sound> sounds;
+    std::map<std::string, std::unique_ptr<sf::Sound>> sounds;
 
     float soundVolume;
     float musicVolume;

@@ -14,7 +14,6 @@ private:
 public:
     Collectible(const std::string &path, sf::RenderWindow &window);
 
-    void loadTextures(const std::string &path, std::vector<sf::Texture> &textures);
     void update();
     void draw(sf::RenderWindow &window);
 };

@@ -25,7 +25,6 @@ private:
 public:
     Player(const std::string &runPath, const std::string &jumpPath, const std::string &jumpSoundPath, sf::RenderWindow &window, AudioManager &audioMgr);
 
-    void loadTextures(const std::string &path, std::vector<sf::Texture> &textures);
     void jump();
     void update();
     void draw(sf::RenderWindow &window);

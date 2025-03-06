@@ -1,11 +1,10 @@
 #include "Player.hpp"
+#include "../utils/TextureLoader.hpp"
 
-Player::Player(const std::string &runPath, const std::string &jumpPath, const std::string &jumpSoundPath, sf::RenderWindow &window, AudioManager &audioMgr) : audioManager(audioMgr), frameIndex(0), isJumping(false), frameTime(0.04f), velocityY(0), gravity(0.8f), jumpForce(-10.0f)
+Player::Player(const std::string &runPath, const std::string &jumpPath, const std::string &jumpSoundPath, sf::RenderWindow &window, AudioManager &audioMgr)
+    : audioManager(audioMgr), frameIndex(0), isJumping(false), frameTime(0.04f), velocityY(0), gravity(0.8f), jumpForce(-10.0f)
 {
-    loadTextures(runPath, texturesRun);
-    loadTextures(jumpPath, texturesJump);
-
-    if (texturesRun.empty() || texturesJump.empty())
+    if (!TextureLoader::loadTextures(runPath, ").png", texturesRun) || !TextureLoader::loadTextures(jumpPath, ").png", texturesJump))
     {
         std::cerr << "Erreur : textures non chargées !" << std::endl;
         exit(-1);
@@ -19,22 +18,6 @@ Player::Player(const std::string &runPath, const std::string &jumpPath, const st
     sprite.setPosition(10, groundY);
 
     audioManager.loadSound("jump", jumpSoundPath);
-}
-
-void Player::loadTextures(const std::string &path, std::vector<sf::Texture> &textures)
-{
-    for (int i = 1; i <= 15; i++)
-    {
-        sf::Texture texture;
-        std::string filePath = path + " (" + std::to_string(i) + ").png";
-        if (!texture.loadFromFile(filePath))
-        {
-            std::cerr << "Attention : image non trouvée -> " << filePath << std::endl;
-            continue;
-        }
-
-        textures.push_back(texture);
-    }
 }
 
 void Player::jump()

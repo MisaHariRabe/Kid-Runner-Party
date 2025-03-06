@@ -3,7 +3,7 @@
 Game::Game()
     : window(sf::VideoMode(1280, 720), "SFML Animation"),
       audioManager(),
-      player("assets/images/characters/character1/Run", "assets/images/characters/character1/Jump", "assets/sounds/SoundFX/happyJump.ogg", window, audioManager),
+      player("assets/images/characters/character1/Run (", "assets/images/characters/character1/Jump (", "assets/sounds/SoundFX/happyJump.ogg", window, audioManager),
       background("assets/images/background/background1.png", window, 1.0f),
       star("assets/images/misc/star/", window)
 {
